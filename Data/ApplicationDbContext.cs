@@ -1,0 +1,30 @@
+﻿using BookingHotel.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace BookingHotel.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions options) : base(options)
+        {
+        }
+
+        protected ApplicationDbContext()
+        {
+        }        
+
+        public DbSet<RoomCategory> RoomCategories { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Room>().
+                HasOne(r => r.RoomCategory).
+                WithMany(rc => rc.Rooms).
+                HasForeignKey(r => r.RoomCategoryId).
+                OnDelete(DeleteBehavior.Cascade);
+        }
+    }
+}
