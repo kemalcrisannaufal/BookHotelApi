@@ -4,6 +4,7 @@ using BookingHotel.Data;
 using BookingHotel.Entities;
 using BookingHotel.Models.Room;
 using BookingHotel.Models.RoomCategory;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -62,6 +63,7 @@ namespace BookingHotel.Controllers
         }
 
         [HttpPost]
+        [Authorize (Roles = "Admin")]
         public async Task<IActionResult> CreateRoomCategory([FromBody] AddRoomCategoryDto addRoomCategoryDto)
         {
             if (!ModelState.IsValid)
@@ -77,6 +79,7 @@ namespace BookingHotel.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRoomCategory(Guid id, [FromBody] UpdateRoomCategoryDto updateRoomCategoryDto)
         {
             if (!ModelState.IsValid) 
@@ -98,6 +101,7 @@ namespace BookingHotel.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveRoomCategory(Guid id)
         {
             var roomCategory = await _context.RoomCategories.FindAsync(id);

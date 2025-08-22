@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using BookingHotel.Data;
 using BookingHotel.Entities;
 using BookingHotel.Models.Room;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,13 +35,13 @@ namespace BookingHotel.Controllers
             
             IQueryable<Room> query = _context.Rooms;
 
-            var total = await query.CountAsync();
-            var totalPages = Math.Ceiling(total / (double)limit);
-
             if (search != "")
             {
                 query = query.Where(r => r.RoomName.Contains(search));
             }
+
+            var total = await query.CountAsync();
+            var totalPages = Math.Ceiling(total / (double)limit);
 
             query = query.Skip((page-1)*limit).Take(limit);
             var data = await query.ProjectTo<RoomDto>(_mapper.ConfigurationProvider).ToListAsync();
@@ -62,6 +63,7 @@ namespace BookingHotel.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateRoom([FromBody] AddRoomDto addRoomDto)
         {
             if (!ModelState.IsValid)
@@ -84,6 +86,7 @@ namespace BookingHotel.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRoom(Guid id, [FromBody] UpdateRoomDto updateRoomDto)
         {
             if (!ModelState.IsValid)
@@ -117,6 +120,7 @@ namespace BookingHotel.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RemoveRoom(Guid id)
         {
             var room = await _context.Rooms.FindAsync(id);
