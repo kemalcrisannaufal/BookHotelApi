@@ -13,6 +13,7 @@ namespace BookingHotel.Data
         {
         }        
 
+        public DbSet<User> Users { get; set; } 
         public DbSet<RoomCategory> RoomCategories { get; set; }
         public DbSet<Room> Rooms { get; set; }
 

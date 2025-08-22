@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BookingHotel.Entities;
+using BookingHotel.Models.Auth;
 using BookingHotel.Models.Room;
 using BookingHotel.Models.RoomCategory;
+using BookingHotel.Models.User;
 
 namespace BookingHotel.Mappings
 {
@@ -25,6 +27,17 @@ namespace BookingHotel.Mappings
                opt => opt.Condition(src => src.RoomCategoryId != Guid.Empty))
                .ForAllMembers(opt =>
                opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<User, UserDto>();
+            CreateMap<RegisterDto, User>().ForMember(
+                dest => dest.PasswordHash,
+                opt => opt.MapFrom(src => BCrypt.Net.BCrypt.HashPassword(src.Password))
+                );
+            CreateMap<UpdatePasswordDto, User>().ForMember(
+                dest => dest.PasswordHash,
+                opt => opt.MapFrom(src => BCrypt.Net.BCrypt.HashPassword(src.NewPassword))
+                ).ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
 
         }
     }
