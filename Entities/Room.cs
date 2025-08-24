@@ -20,5 +20,7 @@ namespace BookingHotel.Entities
         public Guid RoomCategoryId { get; set; }
         public RoomCategory? RoomCategory { get; set; }
 
+        public ICollection<Booking>? Bookings { get; set; } = new List<Booking>();
+
     }
 }

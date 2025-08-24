@@ -24,5 +24,6 @@ namespace BookingHotel.Entities
         [Required]
         public required string PasswordHash { get; set; }
         
+        public ICollection<Booking>? Bookings = new List<Booking>(); 
     }
 }

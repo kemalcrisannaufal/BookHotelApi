@@ -16,6 +16,7 @@ namespace BookingHotel.Data
         public DbSet<User> Users { get; set; } 
         public DbSet<RoomCategory> RoomCategories { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +26,18 @@ namespace BookingHotel.Data
                 HasOne(r => r.RoomCategory).
                 WithMany(rc => rc.Rooms).
                 HasForeignKey(r => r.RoomCategoryId).
+                OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Booking>().
+                HasOne(b => b.User).
+                WithMany(u => u.Bookings).
+                HasForeignKey(b => b.UserId).
+                OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Booking>().
+                HasOne(b => b.Room).
+                WithMany(r => r.Bookings).
+                HasForeignKey(b => b.RoomId).
                 OnDelete(DeleteBehavior.Cascade);
         }
     }
