@@ -2,9 +2,9 @@
 using AutoMapper.QueryableExtensions;
 using BookingHotel.Data;
 using BookingHotel.Entities;
+using BookingHotel.Models.ApplicationResponse;
 using BookingHotel.Models.Room;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,12 +41,13 @@ namespace BookingHotel.Controllers
             }
 
             var total = await query.CountAsync();
-            var totalPages = Math.Ceiling(total / (double)limit);
+            var totalPages = (int) Math.Ceiling(total / (double)limit);
 
             query = query.Skip((page-1)*limit).Take(limit);
             var data = await query.ProjectTo<RoomDto>(_mapper.ConfigurationProvider).ToListAsync();
 
-            return Ok(new { limit, page, total, totalPages, data });
+            var response = new PaginationResponse<RoomDto>(limit, page, total, totalPages, data);
+            return Ok(response);
         }
 
         [HttpGet("{id:guid}")]

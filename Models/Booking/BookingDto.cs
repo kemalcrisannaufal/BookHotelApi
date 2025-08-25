@@ -11,8 +11,7 @@ namespace BookingHotel.Models.Booking
 
         [Required]
         public Guid UserId { get; set; }
-        public UserDto? User { get; set; }
-
+        
         [Required]
         public Guid RoomId { get; set; }
         public RoomDto? Room { get; set; }

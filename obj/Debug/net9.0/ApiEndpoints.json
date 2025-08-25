@@ -153,6 +153,27 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "BookingHotel.Controllers.BookingController",
+    "Method": "GetAllMyBookings",
+    "RelativePath": "api/bookings/mine",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "limit",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "BookingHotel.Controllers.RoomCategoryController",
     "Method": "GetAllRoomCategories",
     "RelativePath": "api/room-categories",

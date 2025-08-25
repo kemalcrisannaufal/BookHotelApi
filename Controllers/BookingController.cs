@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using BookingHotel.Data;
 using BookingHotel.Entities;
+using BookingHotel.Models.ApplicationResponse;
 using BookingHotel.Models.Booking;
 using BookingHotel.Models.Room;
 using Microsoft.AspNetCore.Authorization;
@@ -42,13 +43,15 @@ namespace BookingHotel.Controllers
                 query = query.Where(r => r.Room != null && r.Room.RoomName.Contains(roomName));
             }
 
-            var counts = await query.CountAsync();
-            var totalPage = Math.Ceiling(counts / (double) limit);
+            var total = await query.CountAsync();
+            var totalPages = (int) Math.Ceiling(total / (double) limit);
 
             query = query.Skip((page - 1) * limit).Take(limit);
 
             var data = await query.ProjectTo<BookingDto>(_mapper.ConfigurationProvider).ToListAsync();
-            return Ok(new { limit, page, totalPage, counts, data });
+
+            var response = new PaginationResponse<BookingDto>(limit, page, total, totalPages, data);
+            return Ok(response);
         }
 
         [HttpGet("{id:guid}")]
@@ -150,10 +153,13 @@ namespace BookingHotel.Controllers
             
             var isRoomBooked = await _context.Bookings.AnyAsync(b =>
                 b.RoomId == updateBookingDto.RoomId &&
+                b.Id != bookingData.Id &&
+                (
                 (b.CheckInDate >= updateBookingDto.CheckInDate &&
                 b.CheckOutDate <= updateBookingDto.CheckOutDate) ||
                 (updateBookingDto.CheckInDate >= b.CheckInDate &&
                 updateBookingDto.CheckOutDate <= b.CheckOutDate)
+                )
             );
 
             if (isRoomBooked)
@@ -179,7 +185,7 @@ namespace BookingHotel.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize]
+        [Authorize (Roles = "Admin")]
         public async Task<IActionResult> RemoveBooking(Guid id)
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -202,5 +208,35 @@ namespace BookingHotel.Controllers
             return NoContent();
         }
 
+        [HttpGet("mine")]
+        [Authorize (Roles = "User")]
+        public async Task<IActionResult> GetAllMyBookings(
+            [FromQuery] int limit = 10,
+            [FromQuery] int page = 1
+            )
+        {
+            if (limit <= 0) limit = 10;
+            if (page <= 0) page = 1; 
+
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!Guid.TryParse(userIdString, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            IQueryable<Booking> query = _context.Bookings.Where(b => b.UserId == userId);
+
+            var total = await _context.Bookings.CountAsync();
+            var totalPages = (int) Math.Ceiling(total / (double) limit);
+
+            query = query.Skip((totalPages - 1) * limit).Take(limit);    
+
+            var data = await query.ProjectTo<BookingDto>(_mapper.ConfigurationProvider).ToListAsync();
+
+            var response = new PaginationResponse<BookingDto>(limit, page, total, totalPages, data);
+            return Ok(response);
+
+        }
     }
 }
