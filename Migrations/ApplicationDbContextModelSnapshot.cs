@@ -43,8 +43,9 @@ namespace BookingHotel.Migrations
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("TotalPrice")
                         .HasColumnType("int");
@@ -157,7 +158,7 @@ namespace BookingHotel.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
 

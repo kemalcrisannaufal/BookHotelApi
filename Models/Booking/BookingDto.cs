@@ -2,6 +2,7 @@
 using BookingHotel.Models.Room;
 using BookingHotel.Models.User;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookingHotel.Models.Booking
 {
@@ -30,6 +31,7 @@ namespace BookingHotel.Models.Booking
         public int TotalPrice { get; set; }
 
         [Required]
+        [Column(TypeName = "nvarchar(20)")]
         public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
         [Required]

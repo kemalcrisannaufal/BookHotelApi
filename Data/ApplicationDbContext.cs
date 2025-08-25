@@ -1,4 +1,5 @@
-﻿using BookingHotel.Entities;
+﻿using BCrypt.Net;
+using BookingHotel.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookingHotel.Data
@@ -22,6 +23,16 @@ namespace BookingHotel.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>()
+                .Property(u => u.Role)
+                .HasConversion<string>() 
+                .HasColumnType("nvarchar(10)");
+
+            modelBuilder.Entity<Booking>()
+                .Property(u => u.Status)
+                .HasConversion<string>()
+                .HasColumnType("nvarchar(20)");
+
             modelBuilder.Entity<Room>().
                 HasOne(r => r.RoomCategory).
                 WithMany(rc => rc.Rooms).
@@ -39,6 +50,7 @@ namespace BookingHotel.Data
                 WithMany(r => r.Bookings).
                 HasForeignKey(b => b.RoomId).
                 OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

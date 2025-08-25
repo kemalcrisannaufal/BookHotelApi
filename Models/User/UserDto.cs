@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BookingHotel.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookingHotel.Models.User
 {
@@ -19,6 +20,6 @@ namespace BookingHotel.Models.User
         public required string Email { get; set; }
 
         [Required]
-        public string Role { get; set; } = "User";
+        public UserRole Role { get; set; }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookingHotel.Entities
 {
+
     public class User
     {
         public Guid Id { get; set; }
@@ -19,11 +21,20 @@ namespace BookingHotel.Entities
         public required string Email { get; set; }
 
         [Required]
-        public string Role { get; set; } = "User";
+        [Column(TypeName = " nvarchar(10)")]
+        [EnumDataType(typeof(UserRole))]
+        public UserRole Role { get; set; } = UserRole.User;
 
         [Required]
         public required string PasswordHash { get; set; }
         
         public ICollection<Booking>? Bookings = new List<Booking>(); 
+    }
+
+    public enum UserRole
+    {
+        User,
+        Admin,
+        SuperAdmin,
     }
 }

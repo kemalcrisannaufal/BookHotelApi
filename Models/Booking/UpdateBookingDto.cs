@@ -1,5 +1,6 @@
 ﻿using BookingHotel.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookingHotel.Models.Booking
 {
@@ -14,6 +15,7 @@ namespace BookingHotel.Models.Booking
         [Range(1, int.MaxValue)]
         public int? NumberOfGuests { get; set; }
 
+        [Column(TypeName = "nvarchar(20)")]
         public BookingStatus? Status { get; set; }
     }
 }

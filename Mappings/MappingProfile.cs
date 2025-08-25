@@ -48,7 +48,10 @@ namespace BookingHotel.Mappings
                 opt => opt.MapFrom(src => BookingStatus.Pending));
             CreateMap<UpdateBookingDto, Booking>().ForMember(
                 dest => dest.RoomId,
-                opt => opt.Condition(src => src.RoomId != Guid.Empty)).
+                opt => opt.Condition(src => src.RoomId != Guid.Empty)).ForMember(
+                dest => dest.UpdatedAt,
+                opt => opt.MapFrom(src => DateTime.UtcNow)
+                ).
                 ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
             
         }

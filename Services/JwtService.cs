@@ -22,7 +22,7 @@ namespace BookingHotel.Services
             {
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role,  user.Role.ToString())
             };
 
             var key = new SymmetricSecurityKey(

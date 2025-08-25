@@ -1,5 +1,6 @@
 ﻿using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookingHotel.Entities
 {
@@ -29,6 +30,8 @@ namespace BookingHotel.Entities
         public int TotalPrice { get; set; }
 
         [Required]
+        [Column(TypeName = "nvarchar(20)")]
+        [EnumDataType(typeof(BookingStatus))]
         public BookingStatus Status { get; set; } = BookingStatus.Pending;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
